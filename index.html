@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wärmeleistungsrechner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-lg p-6 md:p-8 space-y-6">
+        
+        <!-- Header -->
+        <div>
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-800 text-center">Rechner für Wärmeleistung</h1>
+            <p class="text-center text-gray-500 mt-2">Passen Sie die Werte an, um die Leistung zu ermitteln.</p>
+        </div>
+        
+        <!-- Reihenfolge der Elemente -->
+
+        <!-- 1. Anzeige: Strömungsgeschwindigkeit mit Button -->
+        <div id="velocityBox" class="bg-gray-50 p-6 rounded-xl text-center shadow-inner output-box">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Strömungsgeschwindigkeit (v)</h3>
+            <p id="velocityOutput" class="text-3xl font-bold text-gray-700">0.00</p>
+            <p class="text-gray-500 font-medium mb-3">m/s</p>
+            <button id="setVelocityBtn" class="w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors text-sm">
+                Volumenstrom für v=1,0 m/s berechnen
+            </button>
+        </div>
+
+        <!-- 2. Eingabe: Rohrdurchmesser -->
+        <div>
+            <label for="diameter" class="font-semibold text-gray-700">Rohr-Innendurchmesser</label>
+            <div class="flex justify-between items-center mt-2 mb-2 bg-gray-50 p-2 rounded-lg">
+                <span id="diameterValue" class="font-bold text-lg text-blue-600">20.0 mm</span>
+                <span id="crossSectionValue" class="text-md text-gray-600">A = 0.000314 m²</span>
+            </div>
+             <div class="flex items-center space-x-2">
+                <input type="range" id="diameter" min="8" max="200" value="20" step="0.1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                <input type="number" id="diameterInput" min="8" max="200" step="0.1" class="w-24 p-1 border border-gray-300 rounded-md text-center">
+            </div>
+        </div>
+        
+        <!-- 3. Eingabe: Volumenstrom -->
+        <div>
+            <label for="volumeFlow" class="font-semibold text-gray-700">Volumenstrom</label>
+            <div class="flex justify-between items-center mt-2 mb-2 bg-gray-50 p-2 rounded-lg">
+                <span id="volumeFlowLpmValue" class="font-bold text-lg text-blue-600">10.0 l/min</span>
+                <span id="volumeFlowM3hValue" class="text-md text-gray-600">0.60 m³/h</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <input type="range" id="volumeFlow" min="1" max="2000" value="10" step="0.1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                <input type="number" id="volumeFlowInput" min="1" max="2000" step="0.1" class="w-24 p-1 border border-gray-300 rounded-md text-center">
+            </div>
+        </div>
+
+        <!-- 4. Eingabe: Temperaturdifferenz mit Druckverlust -->
+        <div>
+            <label for="deltaT" class="font-semibold text-gray-700">Temperaturdifferenz (ΔT)</label>
+            <div class="flex justify-between items-center mt-2 mb-2 bg-gray-50 p-2 rounded-lg">
+                 <span id="deltaTValue" class="font-bold text-lg text-blue-600">10.0 °C</span>
+                 <span id="pressureLossValue" class="text-md text-gray-600">R = 0 Pa/m</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <input type="range" id="deltaT" min="1" max="40" value="10" step="0.1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                <input type="number" id="deltaTInput" min="1" max="40" step="0.1" class="w-24 p-1 border border-gray-300 rounded-md text-center">
+            </div>
+        </div>
+        
+        <!-- 5. Reset Button -->
+        <div class="pt-2">
+            <button id="resetBtn" class="w-full bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors">
+                Auf Standardwerte zurücksetzen
+            </button>
+        </div>
+
+        <!-- 6. Anzeige: Wärmeleistung -->
+        <div class="bg-blue-50 p-6 rounded-xl text-center shadow-inner">
+            <h3 class="text-lg font-semibold text-blue-800 mb-2">Wärmeleistung (P)</h3>
+            <p id="powerOutput" class="text-4xl font-bold text-blue-600">0.00</p>
+            <p class="text-blue-500 font-medium">kW</p>
+        </div>
+        
+        <!-- Einklappbarer Info-Bereich -->
+        <div class="pt-6 border-t border-gray-200">
+            <details class="info-details">
+                <summary class="font-semibold text-gray-700 cursor-pointer flex justify-between items-center">
+                    <span>Formeln & Richtwerte</span>
+                    <span class="arrow"></span>
+                </summary>
+                <div class="mt-4 text-sm text-gray-600 space-y-6">
+                    <div>
+                        <h5 class="font-semibold mb-1">Richtwerte für Strömungsgeschwindigkeit (v)</h5>
+                        <ul class="list-disc list-inside space-y-1">
+                             <li><span class="font-semibold text-green-600">0.5 - 1.0 m/s:</span> Optimal für Wohnbereiche (leise)</li>
+                             <li><span class="font-semibold text-yellow-600">1.0 - 1.5 m/s:</span> Akzeptabel für Hauptleitungen</li>
+                             <li><span class="font-semibold text-red-600">> 1.5 m/s:</span> Kritisch (Gefahr von Geräuschen/Erosion)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h5 class="font-semibold mb-1">Richtwerte für spezifischen Druckverlust (R-Wert)</h5>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li><span class="font-semibold text-green-600">50 - 150 Pa/m (Optimal):</span> Energieeffizient und leise.</li>
+                            <li><span class="font-semibold text-yellow-600">150 - 250 Pa/m (Akzeptabel):</span> Gängiger Bereich, guter Kompromiss.</li>
+                            <li><span class="font-semibold text-red-600">> 250 Pa/m (Hoch):</span> Hohe Pumpenleistung nötig, Geräuschgefahr.</li>
+                        </ul>
+                        <p class="mt-2 text-xs italic">
+                            <b>Hinweis zu Rohrmaterialien:</b> Die Berechnung des R-Werts basiert auf einer Formel für Kupferrohre. Für Stahlrohre ist der Wert tendenziell etwas höher, für Kunststoff-/Verbundrohre etwas niedriger. Der angezeigte Wert dient als sehr guter Richtwert.
+                        </p>
+                    </div>
+                    <div>
+                        <h5 class="font-semibold mb-1">Verwendete Berechnungsformeln</h5>
+                        <ul class="space-y-1 font-mono text-xs bg-gray-100 p-2 rounded">
+                            <li><b>P [kW]</b> = V [m³/h] ⋅ 1.163 ⋅ ΔT [K]</li>
+                            <li><b>v [m/s]</b> = (V [m³/h] / 3600) / A [m²]</li>
+                            <li><b>A [m²]</b> = π ⋅ (d [mm] / 2000)²</li>
+                            <li><b>R [Pa/m]</b> ≈ 21000 ⋅ v¹⁸ / d¹²</li>
+                        </ul>
+                    </div>
+                </div>
+            </details>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
