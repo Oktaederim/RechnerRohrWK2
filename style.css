@@ -1,0 +1,52 @@
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Custom styles for the range slider thumb */
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    width: 20px; /* Set a specific slider handle width */
+    height: 20px; /* Slider handle height */
+    background: #3b82f6; /* Blue background */
+    cursor: pointer; /* Cursor on hover */
+    border-radius: 50%; /* Circular shape */
+    border: 2px solid white; /* White border */
+    box-shadow: 0 0 5px rgba(0,0,0,0.2); /* Add a subtle shadow */
+    margin-top: -8px; /* Centers the thumb on the track */
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #3b82f6;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+
+/* General transition for output boxes */
+.output-box {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Styles für die einklappbare Info-Sektion */
+.info-details summary {
+    list-style: none; /* Entfernt den Standard-Pfeil */
+}
+.info-details summary::-webkit-details-marker {
+    display: none;
+}
+.arrow {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 6px solid #6b7280; /* Pfeil nach rechts (geschlossen) */
+    transition: transform 0.2s ease-in-out;
+}
+.info-details[open] .arrow {
+    transform: rotate(90deg); /* Pfeil nach unten (geöffnet) */
+}
